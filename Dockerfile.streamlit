@@ -1,0 +1,25 @@
+# Base image 
+FROM registry.redhat.io/ubi9/python-311-minimal:latest
+
+# create user 
+RUN useradd -m -u 1001 appuser
+
+# Work directory
+WORKDIR  /app
+
+# Copy files 
+COPY requirements.txt . 
+RUN pip install --no-cache-dir -r requirements.txt 
+
+#copy sorce code and artifacts 
+COPY --chown=appuser:appuser app/ ./app/
+COPY --chown=appuser:appuser ui/ ./ui/
+
+#switch user 
+USER 1001
+
+# fastapi port serive 
+EXPOSE 8000
+
+#Run FastAPI
+CMD ["streamlit" , "run" , "ui/streamlit_app.py" ,"--server.port" , "8501" , "--server.address" , "0.0.0.0" ]

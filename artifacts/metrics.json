@@ -1,0 +1,8 @@
+{
+  "model": "Random Forest",
+  "metrics": {
+    "accuracy": 0.728,
+    "recall": 0.291,
+    "f1": 0.38
+  }
+}

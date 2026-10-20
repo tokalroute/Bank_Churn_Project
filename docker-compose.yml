@@ -1,0 +1,23 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: bank_churn_api
+    ports :
+      - "127.0.0.1:8000:8000"
+    environment:
+      - LOG_LEVEL=INFO
+      - DATA_PATH=data/data_churn.csv
+      - MODEL_PATH=artifacts/churn_model.joblib
+      - METRICS_PATH=artifacts/metrics.json
+    restart : unless-stopped
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: bank_churn_ui
+      - "127.0.0.1:8501:8501"
+    environment:
+      - API_URL+http://api:8000
+    restart : unless-stopped
