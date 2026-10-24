@@ -1,0 +1,10 @@
+name: "Hello World"
+on:
+   push:
+    branch:[test]
+ job:
+   build: 
+    run-on: ubuntu:latest
+   steps:
+   -name: run hello world when push
+   run: echo "Hello World"
