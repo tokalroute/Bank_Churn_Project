@@ -1,0 +1,20 @@
+name: Blue-Green Deployment
+
+jobs:
+  deploy_green:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Idle Environment (Green)
+        run: |
+          echo "Deploying new version to Green environment..."
+          ./deploy.sh --env green
+
+      - name: Health Check on Green
+        run: |
+          echo "Testing Green environment health..."
+          curl --fail https://green.my-app.com/health
+
+      - name: Switch Traffic (Load Balancer Swap)
+        run: |
+          echo "Switching router traffic from Blue to Green..."
+          ./switch-router.sh --target green
