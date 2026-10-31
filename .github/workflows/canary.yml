@@ -1,0 +1,22 @@
+name: Canary Deployment
+
+jobs:
+  canary_rollout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Canary (5% Traffic)
+        run: |
+          echo "Deploying V2 to 5% of users..."
+          ./set-traffic-split.sh --version v2 --weight 5
+
+      - name: Monitor Error Rates & Metrics
+        run: |
+          echo "Monitoring system metrics for 10 minutes..."
+          sleep 60 # محاكاة فترة المراقبة
+          # لو معدل الأخطاء تجاوز النسبة المسموحة، السكريبت هيعمل Rollback
+          ./check-error-rates.sh || ./rollback.sh
+
+      - name: Full Rollout (100% Traffic)
+        run: |
+          echo "Metrics are stable. Scaling to 100%..."
+          ./set-traffic-split.sh --version v2 --weight 100
